@@ -1,0 +1,66 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.github.vebqa</groupId>
+		<artifactId>vebtal-parent</artifactId>
+		<version>0.9.6</version>
+	</parent>
+	<artifactId>vebtal-msg</artifactId>
+	<version>0.9</version>
+	<name>vebtal-msg</name>
+	<description>VEBTAL modul for testing outlook msg files</description>
+
+
+	<packaging>jar</packaging>
+
+	<url>https://github.com/vebqa/vebtal-pdf</url>
+
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<scm>
+		<url>https://github.com/vebqa/vebtal-pdf</url>
+	</scm>
+
+	<issueManagement>
+		<system>GitHub Issues</system>
+		<url>https://github.com/vebqa/vebtal-pdf/issues</url>
+	</issueManagement>
+
+	<developers>
+		<developer>
+			<name>Karsten Doerges</name>
+			<email>kdoerges@googlemail.com</email>
+		</developer>
+	</developers>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<modulename>vebtalpdf</modulename>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.github.vebqa</groupId>
+			<artifactId>vebtal-api</artifactId>
+			<version>0.9.9</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-scratchpad</artifactId>
+			<version>4.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${version.junit}</version>
+		</dependency>
+	</dependencies>
+</project>
