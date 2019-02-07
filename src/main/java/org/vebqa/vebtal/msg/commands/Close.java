@@ -1,9 +1,12 @@
 package org.vebqa.vebtal.msg.commands;
 
+import java.io.IOException;
+
 import org.vebqa.vebtal.annotations.Keyword;
 import org.vebqa.vebtal.command.AbstractCommand;
 import org.vebqa.vebtal.model.CommandType;
 import org.vebqa.vebtal.model.Response;
+import org.vebqa.vebtal.msg.MsgStore;
 import org.vebqa.vebtal.msgrestserver.MsgTestAdaptionPlugin;
 
 @Keyword(module = MsgTestAdaptionPlugin.ID, command = "close")
@@ -16,7 +19,24 @@ public class Close extends AbstractCommand {
 
 	@Override
 	public Response executeImpl(Object driver) {
+		
 		Response tResp = new Response();
+		
+		if (!MsgStore.getStore().isLoaded()) {
+			tResp.setCode(Response.FAILED);
+			tResp.setMessage("No loaded message.");
+			return tResp;
+		}
+		
+		try {
+			MsgStore.getStore().getMessage().close();
+			MsgStore.getStore().setMessage(null);
+		} catch (IOException e) {
+			tResp.setCode(Response.FAILED);
+			tResp.setMessage("Could not close message: " + e.getMessage());
+			return tResp;
+		}
+		
 		tResp.setCode(Response.PASSED);
 		tResp.setMessage("Sucessfully closed message file.");
 		

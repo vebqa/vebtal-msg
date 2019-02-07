@@ -29,7 +29,7 @@ public class MsgResource extends AbstractTestAdaptionResource implements TestAda
 		String failedReason = null;
 		
 		try {
-			Class<?> cmdClass = Class.forName("org.vebqa.vebtal.icomp.commands." + getCommandClassName(cmd));
+			Class<?> cmdClass = Class.forName("org.vebqa.vebtal.msg.commands." + getCommandClassName(cmd));
 			Constructor<?> cons = cmdClass.getConstructor(String.class, String.class, String.class);
 			Object cmdObj = cons.newInstance(cmd.getCommand(), cmd.getTarget(), cmd.getValue());
 			
@@ -41,7 +41,7 @@ public class MsgResource extends AbstractTestAdaptionResource implements TestAda
 			// execute
 			Method m = cmdClass.getDeclaredMethod("executeImpl", Object.class);
 			
-			// API compliance - dummy driver needed as there is no seprate driver
+			// API compliance - dummy driver needed as there is no seperate driver
 			DummyDriver dummyDriver = new DummyDriver();
 			
 			setStart();

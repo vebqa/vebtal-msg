@@ -1,10 +1,5 @@
 package org.vebqa.vebtal.msg.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.poi.hsmf.exceptions.ChunkNotFoundException;
 import org.vebqa.vebtal.annotations.Keyword;
 import org.vebqa.vebtal.command.AbstractCommand;
@@ -13,12 +8,12 @@ import org.vebqa.vebtal.model.Response;
 import org.vebqa.vebtal.msg.MsgStore;
 import org.vebqa.vebtal.msgrestserver.MsgTestAdaptionPlugin;
 
-@Keyword(module = MsgTestAdaptionPlugin.ID, command = "storeText", hintTarget = "regex=", hintValue = "<buffer>")
-public class Storetext extends AbstractCommand {
+@Keyword(module = MsgTestAdaptionPlugin.ID, command = "verifyText", hintTarget = "<text>")
+public class Verifytext extends AbstractCommand {
 
-	public Storetext(String aCommand, String aTarget, String aValue) {
+	public Verifytext(String aCommand, String aTarget, String aValue) {
 		super(aCommand, aTarget, aValue);
-		this.type = CommandType.ACCESSOR;
+		this.type = CommandType.ASSERTION;
 	}
 
 	@Override
@@ -29,7 +24,7 @@ public class Storetext extends AbstractCommand {
 			tResp.setCode(Response.FAILED);
 			tResp.setMessage("No message loaded!");
 			return tResp;
-		}		
+		}
 		
 		String aBody = "";
 		try {
@@ -38,31 +33,16 @@ public class Storetext extends AbstractCommand {
 			tResp.setCode(Response.FAILED);
 			tResp.setMessage("No html body found in message: " + e.getMessage());
 			return tResp;
-		}
+		}		
 		
-		List<String> allMatches = new ArrayList<>();
-		Matcher matcher = Pattern.compile(this.target).matcher(aBody);
-		
-		while (matcher.find()) {
-			allMatches.add(matcher.group());
-		}
-		
-		if (allMatches.size() == 0) {
+		if (!aBody.contains(this.target)) {
 			tResp.setCode(Response.FAILED);
-			tResp.setMessage("No matches found following your regular expression!");
-			return tResp;
-		}
-
-		if (allMatches.size() > 1) {
-			tResp.setCode(Response.FAILED);
-			tResp.setMessage(allMatches.size() + " matches found following your regular expression. That is not unique..");
+			tResp.setMessage("Html body does not contain needle: " + this.target);
 			return tResp;
 		}
 		
 		tResp.setCode(Response.PASSED);
-		tResp.setStoredKey(this.value);
-		tResp.setStoredValue(allMatches.get(0));
-		tResp.setMessage("Stored match: " + allMatches.get(0));
+		tResp.setMessage("Success: " + this.target + " is part of email body.");
 		
 		return tResp;
 	}
