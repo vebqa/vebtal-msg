@@ -10,7 +10,7 @@
 	<artifactId>vebtal-msg</artifactId>
 	<version>0.9</version>
 	<name>vebtal-msg</name>
-	<description>VEBTAL modul for testing outlook msg files</description>
+	<description>Test Adaption Layer for testing outlook msg files</description>
 
 
 	<packaging>jar</packaging>
