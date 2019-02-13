@@ -8,7 +8,7 @@ import org.vebqa.vebtal.model.Response;
 import org.vebqa.vebtal.msg.MsgStore;
 import org.vebqa.vebtal.msgrestserver.MsgTestAdaptionPlugin;
 
-@Keyword(module = MsgTestAdaptionPlugin.ID, command = "verifyDisplayFrom", hintTarget = "The sender email address")
+//@Keyword(module = MsgTestAdaptionPlugin.ID, command = "verifyDisplayFrom", hintTarget = "The sender email address")
 public class Verifydisplayfrom extends AbstractCommand {
 
 	public Verifydisplayfrom(String aCommand, String aTarget, String aValue) {
