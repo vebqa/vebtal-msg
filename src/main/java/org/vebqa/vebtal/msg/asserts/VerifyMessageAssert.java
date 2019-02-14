@@ -16,7 +16,7 @@ public class VerifyMessageAssert extends AbstractAssert<VerifyMessageAssert, Mes
 	
     /**
      * A fluent entry point to our specific assertion class, use it with static import. 
-     * @param	aActualMsg	Our message to test
+     * @param	anActualMsg	Our message to test
      * @return	self
      */
     public static VerifyMessageAssert assertThat(MessageResource anActualMsg) {
