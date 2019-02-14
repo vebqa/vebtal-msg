@@ -22,7 +22,7 @@ public class MessageResource extends ExternalResource {
 	/**
 	 * Name the resource.
 	 * 
-	 * @param aPathToResource
+	 * @param aPathToResource full path to resource
 	 * @return MessageResource
 	 */
 	public MessageResource loadResource(String aPathToResource) {
