@@ -42,7 +42,7 @@ public class Verifysubject extends AbstractCommand {
 		}
 		
 		tResp.setCode(Response.PASSED);
-		tResp.setMessage("Sucess: Found needle in haystack.");
+		tResp.setMessage("Success: Found needle in haystack.");
 		
 		return tResp;
 	}
