@@ -7,7 +7,7 @@ import org.vebqa.vebtal.annotations.Keyword;
 import org.vebqa.vebtal.command.AbstractCommand;
 import org.vebqa.vebtal.model.CommandType;
 import org.vebqa.vebtal.model.Response;
-import org.vebqa.vebtal.msg.MsgStore;
+import org.vebqa.vebtal.msg.MsgDriver;
 import org.vebqa.vebtal.msgrestserver.MsgTestAdaptionPlugin;
 
 @Keyword(module = MsgTestAdaptionPlugin.ID, command = "open", hintTarget = "path/to/message.msg")
@@ -21,7 +21,15 @@ public class Open extends AbstractCommand {
 	@Override
 	public Response executeImpl(Object driver) {
 
+		MsgDriver msgDriver = (MsgDriver)driver;
+		
 		Response tResp = new Response();
+		
+		if (msgDriver.isLoaded()) {
+			tResp.setCode(Response.FAILED);
+			tResp.setMessage("Message already loaded. Close message before.");
+			return tResp;
+		}
 		
 		if (!this.target.toLowerCase().endsWith(".msg")) {
 			tResp.setCode(Response.FAILED);
@@ -38,7 +46,8 @@ public class Open extends AbstractCommand {
 			return tResp;
 		}
 
-		MsgStore.getStore().setMessage(message);
+		// MsgStore.getStore().setMessage(message);
+		msgDriver.setMessage(message);
 		
 		tResp.setCode(Response.PASSED);
 		tResp.setMessage("Sucessfully loaded message file.");

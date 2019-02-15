@@ -5,7 +5,7 @@ import org.vebqa.vebtal.annotations.Keyword;
 import org.vebqa.vebtal.command.AbstractCommand;
 import org.vebqa.vebtal.model.CommandType;
 import org.vebqa.vebtal.model.Response;
-import org.vebqa.vebtal.msg.MsgStore;
+import org.vebqa.vebtal.msg.MsgDriver;
 import org.vebqa.vebtal.msgrestserver.MsgTestAdaptionPlugin;
 
 @Keyword(module = MsgTestAdaptionPlugin.ID, command = "verifyDisplayTo", hintTarget = "The recipient email address")
@@ -18,9 +18,11 @@ public class Verifydisplayto extends AbstractCommand {
 		
 	@Override
 	public Response executeImpl(Object driver) {
+		MsgDriver msgDriver = (MsgDriver)driver;
+		
 		Response tResp = new Response();
 		
-		if (!MsgStore.getStore().isLoaded()) {
+		if (!msgDriver.isLoaded()) {
 			tResp.setCode(Response.FAILED);
 			tResp.setMessage("No message loaded!");
 			return tResp;
@@ -28,7 +30,7 @@ public class Verifydisplayto extends AbstractCommand {
 		
 		String aBody = "";
 		try {
-			aBody = MsgStore.getStore().getMessage().getRecipientEmailAddress();
+			aBody = msgDriver.getMessage().getRecipientEmailAddress();
 		}
 		catch (ChunkNotFoundException e) {
 			tResp.setCode(Response.FAILED);

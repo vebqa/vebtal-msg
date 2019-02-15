@@ -5,7 +5,7 @@ import org.vebqa.vebtal.annotations.Keyword;
 import org.vebqa.vebtal.command.AbstractCommand;
 import org.vebqa.vebtal.model.CommandType;
 import org.vebqa.vebtal.model.Response;
-import org.vebqa.vebtal.msg.MsgStore;
+import org.vebqa.vebtal.msg.MsgDriver;
 import org.vebqa.vebtal.msgrestserver.MsgTestAdaptionPlugin;
 
 @Keyword(module = MsgTestAdaptionPlugin.ID, command = "verifySubject", hintTarget = "<text>")
@@ -18,9 +18,12 @@ public class Verifysubject extends AbstractCommand {
 
 	@Override
 	public Response executeImpl(Object driver) {
+		
+		MsgDriver msgDriver = (MsgDriver)driver;
+		
 		Response tResp = new Response();
 		
-		if (!MsgStore.getStore().isLoaded()) {
+		if (!msgDriver.isLoaded()) {
 			tResp.setCode(Response.FAILED);
 			tResp.setMessage("No message loaded!");
 			return tResp;
@@ -28,7 +31,7 @@ public class Verifysubject extends AbstractCommand {
 		
 		String aSubject = "";
 		try {
-			aSubject = MsgStore.getStore().getMessage().getSubject();
+			aSubject = msgDriver.getMessage().getSubject();
 		} catch (ChunkNotFoundException e) {
 			tResp.setCode(Response.FAILED);
 			tResp.setMessage("No subject found in message: " + e.getMessage());

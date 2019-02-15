@@ -5,6 +5,7 @@ import org.vebqa.vebtal.annotations.Keyword;
 import org.vebqa.vebtal.command.AbstractCommand;
 import org.vebqa.vebtal.model.CommandType;
 import org.vebqa.vebtal.model.Response;
+import org.vebqa.vebtal.msg.MsgDriver;
 import org.vebqa.vebtal.msg.MsgStore;
 import org.vebqa.vebtal.msgrestserver.MsgTestAdaptionPlugin;
 
@@ -18,9 +19,12 @@ public class Verifydisplayfrom extends AbstractCommand {
 		
 	@Override
 	public Response executeImpl(Object driver) {
+		
+		MsgDriver msgDriver = (MsgDriver)driver;
+		
 		Response tResp = new Response();
 		
-		if (!MsgStore.getStore().isLoaded()) {
+		if (!msgDriver.isLoaded()) {
 			tResp.setCode(Response.FAILED);
 			tResp.setMessage("No message loaded!");
 			return tResp;
@@ -29,7 +33,7 @@ public class Verifydisplayfrom extends AbstractCommand {
 		String aBody = "";
 		try {
 			//aBody = MsgStore.getStore().getMessage().getMainChunks().getEmailFromChunk().getValue();
-			aBody = MsgStore.getStore().getMessage().getDisplayFrom();
+			aBody = msgDriver.getMessage().getDisplayFrom();
 		}
 		catch (ChunkNotFoundException e) {
 			tResp.setCode(Response.FAILED);

@@ -1,6 +1,5 @@
 package org.vebqa.vebtal.msg;
 
-import org.apache.poi.hsmf.MAPIMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,28 +9,18 @@ public class MsgStore {
 	
 	private static final MsgStore store = new MsgStore();
 	
-	private MAPIMessage message;
+	private MsgDriver msgDriver;
 	
 	public MsgStore() {
-		
+		this.msgDriver = new MsgDriver();
 	}
 	
 	public static MsgStore getStore() {
 		return store;
 	}
-	
-	public void setMessage(MAPIMessage aMessage) {
-		this.message = aMessage;
+
+	public MsgDriver getDriver() {
+		return msgDriver;
 	}
 	
-	public MAPIMessage getMessage() {
-		return this.message;
-	}
-	
-	public boolean isLoaded() {
-		if (this.message != null) {
-			return true;
-		}
-		return false;
-	}
 }

@@ -11,7 +11,7 @@ import org.vebqa.vebtal.TestAdaptionResource;
 import org.vebqa.vebtal.model.Command;
 import org.vebqa.vebtal.model.CommandType;
 import org.vebqa.vebtal.model.Response;
-import org.vebqa.vebtal.msg.DummyDriver;
+import org.vebqa.vebtal.msg.MsgStore;
 
 public class MsgResource extends AbstractTestAdaptionResource implements TestAdaptionResource {
 
@@ -41,11 +41,8 @@ public class MsgResource extends AbstractTestAdaptionResource implements TestAda
 			// execute
 			Method m = cmdClass.getDeclaredMethod("executeImpl", Object.class);
 			
-			// API compliance - dummy driver needed as there is no seperate driver
-			DummyDriver dummyDriver = new DummyDriver();
-			
 			setStart();
-			result = (Response) m.invoke(cmdObj, dummyDriver);
+			result = (Response) m.invoke(cmdObj, MsgStore.getStore().getDriver());
 			setFinished();
 			
 		} catch (ClassNotFoundException e) {
