@@ -26,4 +26,17 @@ public class VerifyMessageAssertTest {
 		VerifyMessageAssert.assertThat(mut).hasSubject("Elephant is not the subject.");
 	}
 	
+	@Test
+	public void checkIfGivenAddressIsTheEmailRecipientToAddress() {		
+		VerifyMessageAssert.assertThat(mut).hasTheGivenEmailToAddress("Nithiyaa.Radjindirin@vonessenbank.de");
+	}
+	
+	@Test
+	public void checkIfGivenAddressIsNotTheEmailRecipientToAddress() {
+		exception.expect(AssertionError.class);
+		exception.expectMessage("Expected Recipient eMail Address");
+		
+		VerifyMessageAssert.assertThat(mut).hasTheGivenEmailToAddress("tester@vonessenbank.de");//Karsten.Doerges@vonessenbank.de
+	}
+	
 }

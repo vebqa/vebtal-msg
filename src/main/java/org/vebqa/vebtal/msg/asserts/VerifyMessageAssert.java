@@ -42,5 +42,27 @@ public class VerifyMessageAssert extends AbstractAssert<VerifyMessageAssert, Mes
 		}
 		
 		return this;
-    }    
+    }
+
+	/**
+	 * eMail Recipient/To address assertion
+	 * @param	toAddress	an expected recipient address
+	 * @return	self
+	 */
+	public VerifyMessageAssert hasTheGivenEmailToAddress(String toAddress) {
+		// check that we really have a message loaded.
+		isNotNull();
+
+		// do the testing...
+		try {
+			if (!actual.getDocument().getRecipientEmailAddress().contains(toAddress)) {
+				failWithMessage("Expected Recipient eMail Address <%s> was not found in <%s>", toAddress, actual.getDocument().getRecipientEmailAddress());
+			}
+		} catch (ChunkNotFoundException e) {
+			failWithMessage("No chunk for Recipient Addresses found!", e);
+		}
+	
+		return this;
+	}
+
 }
