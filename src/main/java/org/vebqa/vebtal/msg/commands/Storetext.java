@@ -23,7 +23,7 @@ public class Storetext extends AbstractCommand {
 
 	@Override
 	public Response executeImpl(Object driver) {
-		MsgDriver msgDriver = (MsgDriver)driver;
+		MsgDriver msgDriver = (MsgDriver) driver;
 		
 		Response tResp = new Response();
 		
@@ -35,10 +35,10 @@ public class Storetext extends AbstractCommand {
 		
 		String aBody = "";
 		try {
-			aBody = msgDriver.getMessage().getHtmlBody();
+			aBody = msgDriver.getMessage().getRtfBody();
 		} catch (ChunkNotFoundException e) {
 			tResp.setCode(Response.FAILED);
-			tResp.setMessage("No html body found in message: " + e.getMessage());
+			tResp.setMessage("No text body found in message: " + e.getMessage());
 			return tResp;
 		}
 		
@@ -56,9 +56,16 @@ public class Storetext extends AbstractCommand {
 		}
 
 		if (allMatches.size() > 1) {
-			tResp.setCode(Response.FAILED);
-			tResp.setMessage(allMatches.size() + " matches found following your regular expression. That is not unique..");
-			return tResp;
+			boolean allTheSame = true;
+			for (String s : allMatches) {
+				if(!s.equals(allMatches.get(0)))
+					allTheSame = false;
+			}
+			if(allTheSame == false) {
+				tResp.setCode(Response.FAILED);
+				tResp.setMessage(allMatches.size() + " matches found following your regular expression. Does not fetch unique results.");
+				return tResp;
+			}
 		}
 		
 		tResp.setCode(Response.PASSED);

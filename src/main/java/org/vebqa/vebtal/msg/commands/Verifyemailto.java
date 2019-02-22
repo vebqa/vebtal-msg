@@ -1,6 +1,5 @@
 package org.vebqa.vebtal.msg.commands;
 
-import org.apache.poi.hsmf.exceptions.ChunkNotFoundException;
 import org.vebqa.vebtal.annotations.Keyword;
 import org.vebqa.vebtal.command.AbstractCommand;
 import org.vebqa.vebtal.model.CommandType;
@@ -8,10 +7,10 @@ import org.vebqa.vebtal.model.Response;
 import org.vebqa.vebtal.msg.MsgDriver;
 import org.vebqa.vebtal.msgrestserver.MsgTestAdaptionPlugin;
 
-@Keyword(module = MsgTestAdaptionPlugin.ID, command = "verifyText", hintTarget = "Any text in email body")
-public class Verifytext extends AbstractCommand {
+@Keyword(module = MsgTestAdaptionPlugin.ID, command = "verifyEmailTo", hintTarget = "email addres of sender")
+public class Verifyemailto extends AbstractCommand {
 
-	public Verifytext(String aCommand, String aTarget, String aValue) {
+	public Verifyemailto(String aCommand, String aTarget, String aValue) {
 		super(aCommand, aTarget, aValue);
 		this.type = CommandType.ASSERTION;
 	}
@@ -28,25 +27,26 @@ public class Verifytext extends AbstractCommand {
 			return tResp;
 		}
 
-		String expectedTextInbody = this.target;
-		String actualTextBody = "";
-		
+		String expectedEmailToAddress = this.target;
+		String actualEmailToAddress = "";
+
 		try {
-			actualTextBody = msgDriver.getMessage().getTextBody();
-		} catch (ChunkNotFoundException e) {
+			actualEmailToAddress = msgDriver.getMessage().getRecipientEmailAddress().toString();
+		} catch (Exception e) {
 			tResp.setCode(Response.FAILED);
-			tResp.setMessage("No text body found in message: " + e.getMessage());
+			tResp.setMessage("Sender email address not found: " + e.getMessage());
 			return tResp;
 		}
 
-		if (!actualTextBody.contains(expectedTextInbody)) {
+		if (!actualEmailToAddress.contains(expectedEmailToAddress)) {
 			tResp.setCode(Response.FAILED);
-			tResp.setMessage("Text body [" + actualTextBody + "] does not contain needle [" + expectedTextInbody + "]");
+			tResp.setMessage("Expected email address of sender: " + expectedEmailToAddress + ". Found: "
+					+ actualEmailToAddress);
 			return tResp;
 		}
 
 		tResp.setCode(Response.PASSED);
-		tResp.setMessage("Success: " + expectedTextInbody + " is part of email body.");
+		tResp.setMessage("Success: " + expectedEmailToAddress + " is verfied as the email address of sender.");
 
 		return tResp;
 	}

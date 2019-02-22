@@ -8,45 +8,46 @@ import org.vebqa.vebtal.model.Response;
 import org.vebqa.vebtal.msg.MsgDriver;
 import org.vebqa.vebtal.msgrestserver.MsgTestAdaptionPlugin;
 
-@Keyword(module = MsgTestAdaptionPlugin.ID, command = "verifyDisplayTo", hintTarget = "The recipient email address")
+@Keyword(module = MsgTestAdaptionPlugin.ID, command = "verifyDisplayTo", hintTarget = "The display name of the recipient")
 public class Verifydisplayto extends AbstractCommand {
 
 	public Verifydisplayto(String aCommand, String aTarget, String aValue) {
 		super(aCommand, aTarget, aValue);
 		this.type = CommandType.ASSERTION;
 	}
-		
+
 	@Override
 	public Response executeImpl(Object driver) {
-		MsgDriver msgDriver = (MsgDriver)driver;
-		
+		MsgDriver msgDriver = (MsgDriver) driver;
+
 		Response tResp = new Response();
-		
+
 		if (!msgDriver.isLoaded()) {
 			tResp.setCode(Response.FAILED);
 			tResp.setMessage("No message loaded!");
 			return tResp;
 		}
-		
-		String aBody = "";
+
+		String expectedDisplayTo = this.target;
+		String actualDisplayTo = "";
+
 		try {
-			aBody = msgDriver.getMessage().getRecipientEmailAddress();
-		}
-		catch (ChunkNotFoundException e) {
+			actualDisplayTo = msgDriver.getMessage().getDisplayTo();
+		} catch (ChunkNotFoundException e) {
 			tResp.setCode(Response.FAILED);
 			tResp.setMessage("No recipient address found: " + e.getMessage());
 			return tResp;
-		}		
-		
-		if (!aBody.contains(this.target)) {
+		}
+
+		if (!actualDisplayTo.equals(expectedDisplayTo)) {
 			tResp.setCode(Response.FAILED);
-			tResp.setMessage("eMail does not contain the given TO address: " + this.target);
+			tResp.setMessage("Expected display name of recipient: " + expectedDisplayTo + ". Found: " + actualDisplayTo);
 			return tResp;
 		}
-		
+
 		tResp.setCode(Response.PASSED);
-		tResp.setMessage("Success: " + this.target + " is verfied as the TO address.");
-		
+		tResp.setMessage("Success: " + expectedDisplayTo + " is verfied as the display name of recipient.");
+
 		return tResp;
 	}
 

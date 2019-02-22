@@ -11,11 +11,12 @@ public class VerifyMessageAssertTest {
 	public ExpectedException exception = ExpectedException.none();
 	
 	@Rule
-	public final MessageResource mut = new MessageResource().loadResource("./src/test/java/resource/test_01.msg");
+	public final MessageResource sampleReceivedMail = new MessageResource().loadResource("./src/test/java/resource/Received Test Mail.msg");
+	public final MessageResource mut = new MessageResource().loadResource("./src/test/java/resource/Ihre TOP-Kreditanfrage Nr. 54427270 Theodor Ebnerus.msg");
 	
 	@Test
 	public void checkThatMessageHasSpecificSubject() {
-		VerifyMessageAssert.assertThat(mut).hasSubject("This is a test subject");
+		VerifyMessageAssert.assertThat(mut).hasSubject("Ihre TOP-Kreditanfrage Nr. 54427270, Theodor Ebnerus");
 	}
 	
 	@Test
@@ -23,20 +24,93 @@ public class VerifyMessageAssertTest {
 		exception.expect(AssertionError.class);
 		exception.expectMessage("Expected subject is");
 		
-		VerifyMessageAssert.assertThat(mut).hasSubject("Elephant is not the subject.");
+		VerifyMessageAssert.assertThat(mut).hasSubject("This is not a test subject.");
 	}
 	
 	@Test
-	public void checkIfGivenAddressIsTheEmailRecipientToAddress() {		
-		VerifyMessageAssert.assertThat(mut).hasTheGivenEmailToAddress("Nithiyaa.Radjindirin@vonessenbank.de");
+	public void checkIfMessageContainsText() {
+		VerifyMessageAssert.assertThat(mut).hasTextInBody("54427270");
 	}
 	
 	@Test
-	public void checkIfGivenAddressIsNotTheEmailRecipientToAddress() {
+	public void checkIfMessageDoesNotContainText() {
 		exception.expect(AssertionError.class);
-		exception.expectMessage("Expected Recipient eMail Address");
+		exception.expectMessage("is not found in email body");
 		
-		VerifyMessageAssert.assertThat(mut).hasTheGivenEmailToAddress("tester@vonessenbank.de");//Karsten.Doerges@vonessenbank.de
+		VerifyMessageAssert.assertThat(mut).hasTextInBody("Wrong Text");
 	}
 	
+	@Test
+	public void checkIfGivenNameIsInDisplayFrom() {		
+		VerifyMessageAssert.assertThat(mut).hasTheGivenNameInDisplayFrom("Consors Finanz");
+	}
+	
+	@Test
+	public void checkIfGivenNameIsNotInDisplayFrom() {
+		exception.expect(AssertionError.class);
+		exception.expectMessage("Expected Sender Name");
+		
+		VerifyMessageAssert.assertThat(mut).hasTheGivenNameInDisplayFrom("Not Consors Finanz");
+	}
+	
+	@Test
+	public void checkIfGivenNameIsInDisplayTo() {		
+		VerifyMessageAssert.assertThat(mut).hasTheGivenNameInDisplayTo("Huber, Manuel (EA)");
+	}
+	
+	@Test
+	public void checkIfGivenNameIsNotInDisplayTo() {
+		exception.expect(AssertionError.class);
+		exception.expectMessage("Expected Recipient Name");
+		
+		VerifyMessageAssert.assertThat(mut).hasTheGivenNameInDisplayTo("Not Huber, Manuel (EA)");
+	}
+	
+	@Test
+	public void checkIfSenderEmailAddressIsFound() {		
+		VerifyMessageAssert.assertThat(mut).hasTheGivenSenderEmailAddress("noreply@consorsfinanz.de");
+	}
+	
+	@Test
+	public void checkIfSenderEmailAddressIsNotFound() {
+		exception.expect(AssertionError.class);
+		exception.expectMessage("Expected Sender email");
+		
+		VerifyMessageAssert.assertThat(mut).hasTheGivenSenderEmailAddress("tester@vonessenbank.de");
+	}
+	
+	@Test
+	public void checkIfGivenRecipientAddressIsFound() {		
+		VerifyMessageAssert.assertThat(mut).hasTheGivenRecipientAddress("Manuel.Huber@consorsfinanz.de");
+	}
+	
+	@Test
+	public void checkIfGivenRecipientAddressIsNotFound() {
+		exception.expect(AssertionError.class);
+		exception.expectMessage("Expected Recipient email");
+		
+		VerifyMessageAssert.assertThat(mut).hasTheGivenRecipientAddress("Nithiyaa.Radjindirin@vonessenbank.de");
+	}
+	
+	@Test
+	public void findUniqueTextFromEmailBody() {		
+		VerifyMessageAssert.assertThat(mut).findingTextInBodyUsingRegex("(http|ftp|https)://(sit1+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?");
+	}
+	
+	@Test
+	public void findMultipleTextsFromEmailBody() {
+		exception.expect(AssertionError.class);
+		exception.expectMessage("matches found following your regular expression");
+		
+		VerifyMessageAssert.assertThat(mut).findingTextInBodyUsingRegex("(http|ftp|https)://([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?");
+	}
+	
+	@Test
+	public void textNotFoundFromEmailBody() {
+		exception.expect(AssertionError.class);
+		exception.expectMessage("No matches found following your regular expression");
+		
+		VerifyMessageAssert.assertThat(mut).findingTextInBodyUsingRegex("(http|ftp|https)://(notfound+(?:(?:\\\\.[\\\\w_-]+)+))([\\\\w.,@?^=%&:/~+#-]*[\\\\w@?^=%&/~+#-])?");
+	}
+
 }

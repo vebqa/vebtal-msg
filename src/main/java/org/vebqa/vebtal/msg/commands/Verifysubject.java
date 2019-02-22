@@ -8,18 +8,17 @@ import org.vebqa.vebtal.model.Response;
 import org.vebqa.vebtal.msg.MsgDriver;
 import org.vebqa.vebtal.msgrestserver.MsgTestAdaptionPlugin;
 
-@Keyword(module = MsgTestAdaptionPlugin.ID, command = "verifySubject", hintTarget = "<text>")
+@Keyword(module = MsgTestAdaptionPlugin.ID, command = "verifySubject", hintTarget = "The email Subject")
 public class Verifysubject extends AbstractCommand {
 
 	public Verifysubject(String aCommand, String aTarget, String aValue) {
 		super(aCommand, aTarget, aValue);
-		this.type = CommandType.ACTION;
+		this.type = CommandType.ASSERTION;
 	}
 
 	@Override
 	public Response executeImpl(Object driver) {
-		
-		MsgDriver msgDriver = (MsgDriver)driver;
+		MsgDriver msgDriver = (MsgDriver) driver;
 		
 		Response tResp = new Response();
 		
@@ -29,23 +28,25 @@ public class Verifysubject extends AbstractCommand {
 			return tResp;
 		}
 		
-		String aSubject = "";
+		String expectedSubject = this.target;
+		String actualSubject = "";
+				
 		try {
-			aSubject = msgDriver.getMessage().getSubject();
+			actualSubject = msgDriver.getMessage().getSubject();
 		} catch (ChunkNotFoundException e) {
 			tResp.setCode(Response.FAILED);
 			tResp.setMessage("No subject found in message: " + e.getMessage());
 			return tResp;
 		}
 		
-		if (!aSubject.contains(this.target)) {
+		if (!actualSubject.equals(expectedSubject)) {
 			tResp.setCode(Response.FAILED);
-			tResp.setMessage("Subject [" + aSubject + "] does not contain expected pattern: " + this.target);
+			tResp.setMessage("The Actual Subject [" + actualSubject + "] does not match with the expected subject [" + expectedSubject + "]");
 			return tResp;
 		}
 		
 		tResp.setCode(Response.PASSED);
-		tResp.setMessage("Success: Found needle in haystack.");
+		tResp.setMessage("Success: The given subject matches.");
 		
 		return tResp;
 	}
