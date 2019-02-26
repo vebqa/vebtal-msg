@@ -13,15 +13,15 @@ public class MsgDriver {
 
 	private MAPIMessage message;
 	
-	private boolean isLoaded;
+	private boolean msgIsLoaded;
 	
 	public MsgDriver() {
-		// TODO Auto-generated constructor stub
+		this.msgIsLoaded = false;
 	}
 	
 	public void setMessage(MAPIMessage aMessage) {
 		this.message = aMessage;
-		this.isLoaded = true;
+		this.msgIsLoaded = true;
 	}
 	
 	public MAPIMessage getMessage() {
@@ -29,11 +29,11 @@ public class MsgDriver {
 	}	
 	
 	public boolean isLoaded() {
-		return this.isLoaded;
+		return this.msgIsLoaded;
 	}
 	
 	public void close() throws IOException {
 		this.message.close();
-		this.isLoaded = false;
+		this.msgIsLoaded = false;
 	}	
 }
