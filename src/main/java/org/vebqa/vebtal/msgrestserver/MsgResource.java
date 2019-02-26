@@ -7,11 +7,13 @@ import java.lang.reflect.Method;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vebqa.vebtal.AbstractTestAdaptionResource;
+import org.vebqa.vebtal.GuiManager;
 import org.vebqa.vebtal.TestAdaptionResource;
 import org.vebqa.vebtal.model.Command;
 import org.vebqa.vebtal.model.CommandType;
 import org.vebqa.vebtal.model.Response;
 import org.vebqa.vebtal.msg.MsgStore;
+import org.vebqa.vebtal.sut.SutStatus;
 
 public class MsgResource extends AbstractTestAdaptionResource implements TestAdaptionResource {
 
@@ -90,6 +92,12 @@ public class MsgResource extends AbstractTestAdaptionResource implements TestAda
 		} else {
 			MsgTestAdaptionPlugin.setLatestResult(true, result.getMessage());
 		}
+		
+		if (MsgStore.getStore().getDriver().isLoaded()) {
+			GuiManager.getinstance().setTabStatus(MsgTestAdaptionPlugin.ID, SutStatus.CONNECTED);
+		} else {
+			GuiManager.getinstance().setTabStatus(MsgTestAdaptionPlugin.ID, SutStatus.DISCONNECTED);
+		}		
 		
 		MsgTestAdaptionPlugin.setDisableUserActions(true);
 		return result;
