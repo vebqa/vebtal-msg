@@ -39,9 +39,9 @@ public class Verifydisplayto extends AbstractCommand {
 			return tResp;
 		}
 
-		if (!actualDisplayTo.equals(expectedDisplayTo)) {
+		if (!actualDisplayTo.contains(expectedDisplayTo)) {
 			tResp.setCode(Response.FAILED);
-			tResp.setMessage("Expected display name of recipient: " + expectedDisplayTo + ". Found: " + actualDisplayTo);
+			tResp.setMessage("Expected display name of Recipient: " + expectedDisplayTo + ". Found Recipients: " + actualDisplayTo);
 			return tResp;
 		}
 

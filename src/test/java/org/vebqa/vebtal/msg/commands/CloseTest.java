@@ -1,28 +1,33 @@
 package org.vebqa.vebtal.msg.commands;
 
+import static org.hamcrest.beans.SamePropertyValuesAs.samePropertyValuesAs;
 import static org.junit.Assert.assertThat;
 
-import static org.hamcrest.beans.SamePropertyValuesAs.samePropertyValuesAs;
+import org.junit.Rule;
 import org.junit.Test;
 import org.vebqa.vebtal.model.Response;
 import org.vebqa.vebtal.msg.MsgDriver;
 
-public class OpenTest {
+public class CloseTest {
+
+	@Rule
+	public final MsgDriver mut = new MsgDriver().loadMsgFile("./src/test/java/resource/Received Test Mail.msg");
 
 	@Test
-	public void openMessage() {
+	public void closeMessage() {
 		
 		// create command to test
-		Open cmd = new Open("open", "./src/test/java/resource/Received Test Mail.msg", "");
-		Response result = cmd.executeImpl(new MsgDriver());
-		
+		Close cmd = new Close("close", "", "");
+		Response result = cmd.executeImpl(mut);
+
 		// create a green result object
 		Response resultCheck = new Response();
 		resultCheck.setCode(Response.PASSED);
-		resultCheck.setMessage("Sucessfully loaded message file.");
-		
+		resultCheck.setMessage("Sucessfully closed message file.");
+
 		// check
 		assertThat(resultCheck, samePropertyValuesAs(result));
 		
 	}
+	
 }

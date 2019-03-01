@@ -32,7 +32,7 @@ public class Verifytext extends AbstractCommand {
 		String actualTextBody = "";
 		
 		try {
-			actualTextBody = msgDriver.getMessage().getTextBody();
+			actualTextBody = msgDriver.getMessage().getRtfBody();
 		} catch (ChunkNotFoundException e) {
 			tResp.setCode(Response.FAILED);
 			tResp.setMessage("No text body found in message: " + e.getMessage());

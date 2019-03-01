@@ -7,9 +7,9 @@ import java.util.regex.Pattern;
 
 import org.apache.poi.hsmf.exceptions.ChunkNotFoundException;
 import org.assertj.core.api.AbstractAssert;
-import org.vebqa.vebtal.msg.MessageResource;
+import org.vebqa.vebtal.msg.MsgDriver;
 
-public class VerifyMessageAssert extends AbstractAssert<VerifyMessageAssert, MessageResource> {
+public class VerifyMessageAssert extends AbstractAssert<VerifyMessageAssert, MsgDriver> {
 
 	/**
 	 * Constructor assertion class, MSG filename is the object we want to make
@@ -17,7 +17,7 @@ public class VerifyMessageAssert extends AbstractAssert<VerifyMessageAssert, Mes
 	 * 
 	 * @param anActualMsg a document to test
 	 */
-	public VerifyMessageAssert(MessageResource anActualMsg) {
+	public VerifyMessageAssert(MsgDriver anActualMsg) {
 		super(anActualMsg, VerifyMessageAssert.class);
 	}
 
@@ -28,7 +28,7 @@ public class VerifyMessageAssert extends AbstractAssert<VerifyMessageAssert, Mes
 	 * @param anActualMsg Our message to test
 	 * @return self
 	 */
-	public static VerifyMessageAssert assertThat(MessageResource anActualMsg) {
+	public static VerifyMessageAssert assertThat(MsgDriver anActualMsg) {
 		return new VerifyMessageAssert(anActualMsg);
 	}
 
@@ -44,8 +44,8 @@ public class VerifyMessageAssert extends AbstractAssert<VerifyMessageAssert, Mes
 
 		// do the testing...
 		try {
-			if (!actual.getDocument().getSubject().contentEquals(aSubject)) {
-				failWithMessage("Expected subject is <%s> but was <%s>", aSubject, actual.getDocument().getSubject());
+			if (!actual.getMessage().getSubject().contentEquals(aSubject)) {
+				failWithMessage("Expected subject is <%s> but was <%s>", aSubject, actual.getMessage().getSubject());
 			}
 		} catch (ChunkNotFoundException e) {
 			failWithMessage("No chunk for subject found!", e);
@@ -66,7 +66,7 @@ public class VerifyMessageAssert extends AbstractAssert<VerifyMessageAssert, Mes
 
 		// do the testing...
 		try {
-			String actualTextBody = actual.getDocument().getTextBody();
+			String actualTextBody = actual.getMessage().getRtfBody();
 			if (!actualTextBody.contains(expectedTextInBody)) {
 				failWithMessage("Expected text <%s> is not found in email body <%s>", expectedTextInBody,
 						actualTextBody);
@@ -90,7 +90,7 @@ public class VerifyMessageAssert extends AbstractAssert<VerifyMessageAssert, Mes
 
 		// do the testing...
 		try {
-			String actualDisplayFrom = actual.getDocument().getDisplayFrom();
+			String actualDisplayFrom = actual.getMessage().getDisplayFrom();
 			if (!actualDisplayFrom.equals(displayFrom)) {
 				failWithMessage("Expected Sender Name <%s> was not the same as <%s>", displayFrom, actualDisplayFrom);
 			}
@@ -113,8 +113,8 @@ public class VerifyMessageAssert extends AbstractAssert<VerifyMessageAssert, Mes
 
 		// do the testing...
 		try {
-			String actualDisplayTo = actual.getDocument().getDisplayTo();
-			if (!actualDisplayTo.equals(displayTo)) {
+			String actualDisplayTo = actual.getMessage().getDisplayTo();
+			if (!actualDisplayTo.contains(displayTo)) {
 				failWithMessage("Expected Recipient Name <%s> was not the same as <%s>", displayTo, actualDisplayTo);
 			}
 		} catch (ChunkNotFoundException e) {
@@ -123,7 +123,7 @@ public class VerifyMessageAssert extends AbstractAssert<VerifyMessageAssert, Mes
 
 		return this;
 	}
-	
+
 	/**
 	 * eMail address of sender assertion
 	 * 
@@ -136,17 +136,29 @@ public class VerifyMessageAssert extends AbstractAssert<VerifyMessageAssert, Mes
 
 		// do the testing...
 		try {
-			String actualSenderEmail = actual.getDocument().getMainChunks().getEmailFromChunk().toString();
-			if (!actualSenderEmail.equals(expectedSenderEmail)) {
-				failWithMessage("Expected Sender email <%s> was not the same as <%s>", expectedSenderEmail, actualSenderEmail);
+			String[] header = actual.getMessage().getHeaders();
+			for (String value : header) {
+				if (value.startsWith("From:")) {
+					List<String> allMatches = new ArrayList<String>();
+					Matcher m = Pattern.compile("(?<name>[\\w.]+)\\@(?<domain>\\w+\\.\\w+)(\\.\\w+)?").matcher(value);
+					while (m.find()) {
+						allMatches.add(m.group());
+					}
+					String[] fromAddress = new String[allMatches.size()];
+					fromAddress = allMatches.toArray(fromAddress);
+					if (!allMatches.get(0).contains(expectedSenderEmail)) {
+						failWithMessage("Expected Sender email Address <%s> does not exist. Actual address found: <%s>",
+								expectedSenderEmail, allMatches);
+					}
+				}
 			}
 		} catch (Exception e) {
-			failWithMessage("No chunk for Sender Addresses found!", e);
+			failWithMessage("No chunk for Sender Addresses found! ", e);
 		}
 
 		return this;
 	}
-	
+
 	/**
 	 * eMail address in To/CC assertion
 	 * 
@@ -159,9 +171,10 @@ public class VerifyMessageAssert extends AbstractAssert<VerifyMessageAssert, Mes
 
 		// do the testing...
 		try {
-			String actualRecipientAddresses = actual.getDocument().getRecipientEmailAddress().toString();
+			String actualRecipientAddresses = actual.getMessage().getRecipientEmailAddress().toString();
 			if (!actualRecipientAddresses.contains(expectedRecipientAddress)) {
-				failWithMessage("Expected Recipient email <%s> was not found in <%s>", expectedRecipientAddress, actualRecipientAddresses);
+				failWithMessage("Expected Recipient email <%s> was not found in <%s>", expectedRecipientAddress,
+						actualRecipientAddresses);
 			}
 		} catch (Exception e) {
 			failWithMessage("No chunk for Recipient Addresses found!", e);
@@ -182,7 +195,7 @@ public class VerifyMessageAssert extends AbstractAssert<VerifyMessageAssert, Mes
 
 		// do the testing...
 		try {
-			String actualTextBody = actual.getDocument().getRtfBody();
+			String actualTextBody = actual.getMessage().getRtfBody();
 			List<String> allMatches = new ArrayList<>();
 			Matcher matcher = Pattern.compile(regEx).matcher(actualTextBody);
 			while (matcher.find()) {
@@ -193,16 +206,15 @@ public class VerifyMessageAssert extends AbstractAssert<VerifyMessageAssert, Mes
 			}
 			if (allMatches.size() > 1) {
 				boolean allTheSame = true;
-				for (String s : allMatches)
-				{
-					if(!s.equals(allMatches.get(0)))
+				for (String s : allMatches) {
+					if (!s.equals(allMatches.get(0)))
 						allTheSame = false;
-					}
-				if(allTheSame == false) {
-					failWithMessage(allMatches.size() + " matches found following your regular expression. Does not fetch unique results.");
-					}
 				}
-			System.out.println("Fetched Match: " + allMatches.get(0));
+				if (allTheSame == false) {
+					failWithMessage(allMatches.size()
+							+ " matches found following your regular expression. Does not fetch unique results.");
+				}
+			}
 		} catch (Exception e) {
 			failWithMessage("No chunk for text body found!", e);
 		}

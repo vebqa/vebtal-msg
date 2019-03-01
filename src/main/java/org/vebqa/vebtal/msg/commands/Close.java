@@ -20,7 +20,7 @@ public class Close extends AbstractCommand {
 	@Override
 	public Response executeImpl(Object driver) {
 		
-		MsgDriver msgDriver = (MsgDriver)driver;
+		MsgDriver msgDriver = (MsgDriver) driver;
 		
 		Response tResp = new Response();
 		

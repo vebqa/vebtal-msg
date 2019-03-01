@@ -1,5 +1,10 @@
 package org.vebqa.vebtal.msg.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.vebqa.vebtal.annotations.Keyword;
 import org.vebqa.vebtal.command.AbstractCommand;
 import org.vebqa.vebtal.model.CommandType;
@@ -20,6 +25,7 @@ public class Verifyemailfrom extends AbstractCommand {
 		MsgDriver msgDriver = (MsgDriver) driver;
 
 		Response tResp = new Response();
+		List<String> allMatches = new ArrayList<String>();
 
 		if (!msgDriver.isLoaded()) {
 			tResp.setCode(Response.FAILED);
@@ -27,26 +33,34 @@ public class Verifyemailfrom extends AbstractCommand {
 			return tResp;
 		}
 
-		String expectedEmailFromAddress = this.target;
-		String actualEmailFromAddress = "";
+		String expectedSenderEmail = this.target;
 
 		try {
-			actualEmailFromAddress = msgDriver.getMessage().getMainChunks().getEmailFromChunk().toString();
+			String[] header = msgDriver.getMessage().getHeaders();
+			for (String value : header) {
+				if (value.startsWith("From:")) {
+					Matcher m = Pattern.compile("(?<name>[\\w.]+)\\@(?<domain>\\w+\\.\\w+)(\\.\\w+)?").matcher(value);
+					while (m.find()) {
+						allMatches.add(m.group());
+					}
+					String[] fromAddress = new String[allMatches.size()];
+					fromAddress = allMatches.toArray(fromAddress);
+				}
+			}
 		} catch (Exception e) {
 			tResp.setCode(Response.FAILED);
-			tResp.setMessage("Sender email address not found: " + e.getMessage());
+			tResp.setMessage("No chunk for Sender Addresses found! " + e.getMessage());
 			return tResp;
 		}
 
-		if (!actualEmailFromAddress.equals(expectedEmailFromAddress)) {
+		if (!allMatches.get(0).contains(expectedSenderEmail)) {
 			tResp.setCode(Response.FAILED);
-			tResp.setMessage("Expected email address of sender: " + expectedEmailFromAddress + ". Found: "
-					+ actualEmailFromAddress);
+			tResp.setMessage("Expected email address of sender: " + expectedSenderEmail	+ ". Found: " + allMatches.get(0));
 			return tResp;
 		}
 
 		tResp.setCode(Response.PASSED);
-		tResp.setMessage("Success: " + expectedEmailFromAddress + " is verfied as the email address of sender.");
+		tResp.setMessage("Success: " + expectedSenderEmail + " is verfied as the email address of sender.");
 
 		return tResp;
 	}

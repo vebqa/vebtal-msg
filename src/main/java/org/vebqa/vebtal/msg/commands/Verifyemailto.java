@@ -34,19 +34,19 @@ public class Verifyemailto extends AbstractCommand {
 			actualEmailToAddress = msgDriver.getMessage().getRecipientEmailAddress().toString();
 		} catch (Exception e) {
 			tResp.setCode(Response.FAILED);
-			tResp.setMessage("Sender email address not found: " + e.getMessage());
+			tResp.setMessage("Recipient email address not found: " + e.getMessage());
 			return tResp;
 		}
 
 		if (!actualEmailToAddress.contains(expectedEmailToAddress)) {
 			tResp.setCode(Response.FAILED);
-			tResp.setMessage("Expected email address of sender: " + expectedEmailToAddress + ". Found: "
+			tResp.setMessage("Expected email address of recipient: " + expectedEmailToAddress + ". Found: "
 					+ actualEmailToAddress);
 			return tResp;
 		}
 
 		tResp.setCode(Response.PASSED);
-		tResp.setMessage("Success: " + expectedEmailToAddress + " is verfied as the email address of sender.");
+		tResp.setMessage("Success: " + expectedEmailToAddress + " is verfied as the email address of recipient.");
 
 		return tResp;
 	}
