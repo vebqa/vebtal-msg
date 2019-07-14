@@ -5,10 +5,10 @@
 	<parent>
 		<groupId>com.github.vebqa</groupId>
 		<artifactId>vebtal-parent</artifactId>
-		<version>1.0.0</version>
+		<version>1.0.1</version>
 	</parent>
 	<artifactId>vebtal-msg</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<name>vebtal-msg</name>
 	<description>Test Adaption Layer for testing outlook msg files</description>
 
@@ -50,7 +50,7 @@
 		<dependency>
 			<groupId>com.github.vebqa</groupId>
 			<artifactId>vebtal-api</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
