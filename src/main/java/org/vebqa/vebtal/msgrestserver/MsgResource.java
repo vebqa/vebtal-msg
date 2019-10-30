@@ -87,10 +87,10 @@ public class MsgResource extends AbstractTestAdaptionResource implements TestAda
 			MsgTestAdaptionPlugin.setDisableUserActions(true);
 			return result;
 		}
-		if (result.getCode() != Response.PASSED) {
-			MsgTestAdaptionPlugin.setLatestResult(false, result.getMessage());
-		} else {
+		if (result.getCode().equals(Response.PASSED)) {
 			MsgTestAdaptionPlugin.setLatestResult(true, result.getMessage());
+		} else {
+			MsgTestAdaptionPlugin.setLatestResult(false, result.getMessage());
 		}
 		
 		if (MsgStore.getStore().getDriver().isLoaded()) {
