@@ -8,7 +8,7 @@
 		<version>1.0.2</version>
 	</parent>
 	<artifactId>vebtal-msg</artifactId>
-	<version>1.0.2</version>
+	<version>1.0.2.1</version>
 	<name>vebtal-msg</name>
 	<description>Test Adaption Layer for testing outlook msg files</description>
 

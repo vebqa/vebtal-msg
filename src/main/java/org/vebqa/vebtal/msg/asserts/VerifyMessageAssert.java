@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.poi.hsmf.datatypes.AttachmentChunks;
 import org.apache.poi.hsmf.exceptions.ChunkNotFoundException;
 import org.assertj.core.api.AbstractAssert;
 import org.vebqa.vebtal.msg.MsgDriver;
@@ -222,4 +223,15 @@ public class VerifyMessageAssert extends AbstractAssert<VerifyMessageAssert, Msg
 		return this;
 	}
 
+	VerifyMessageAssert hasGivenNumberOfAttachments(int aNumber) {
+		// check that we really have a message loaded.
+		isNotNull();
+
+		// do the testing...
+		AttachmentChunks[] attachments = actual.getMessage().getAttachmentFiles();
+		if (aNumber != attachments.length) {
+			failWithMessage("Expected number of attachments is: " + aNumber + " but is: " + attachments.length);
+		}
+		return this;
+	}
 }

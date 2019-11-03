@@ -7,6 +7,15 @@
 	</properties>
 	<body>
 		<release version="1.0.2.1" date="2019-10.30" description="maintenance">
+			<action dev="kdoerges" type="add">
+				new keyword: verifyNumberAttachments
+			</action>
+			<action dev="kdoerges" type="add">
+				added verify number attachments to VerifyMessageAssert
+			</action>
+			<action dev="kdoerges" type="add">
+				new keyword: extractAttachment
+			</action>		
 			<action dev="kdoerges" type="update">
 				update apache poi 4.1.1
 			</action>		
