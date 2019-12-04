@@ -223,6 +223,12 @@ public class VerifyMessageAssert extends AbstractAssert<VerifyMessageAssert, Msg
 		return this;
 	}
 
+	/**
+	 * Verify that a message has a given number of attachments.
+	 * 
+	 * @param aNumber
+	 * @return self
+	 */
 	VerifyMessageAssert hasGivenNumberOfAttachments(int aNumber) {
 		// check that we really have a message loaded.
 		isNotNull();
