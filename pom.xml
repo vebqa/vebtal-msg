@@ -5,12 +5,12 @@
 	<parent>
 		<groupId>com.github.vebqa</groupId>
 		<artifactId>vebtal-parent</artifactId>
-		<version>1.0.3.1</version>
+		<version>1.0.5</version>
 	</parent>
 	<artifactId>vebtal-msg</artifactId>
-	<version>1.0.3.1</version>
+	<version>1.0.5</version>
 	<name>vebtal-msg</name>
-	<description>Test Adaption Layer for testing outlook msg files</description>
+	<description>Test Adaptation Layer for testing outlook msg files</description>
 
 	<packaging>jar</packaging>
 
@@ -49,12 +49,12 @@
 		<dependency>
 			<groupId>com.github.vebqa</groupId>
 			<artifactId>vebtal-api</artifactId>
-			<version>1.0.3.1</version>
+			<version>1.0.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-scratchpad</artifactId>
-			<version>4.1.1</version>
+			<version>4.1.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.assertj</groupId>
