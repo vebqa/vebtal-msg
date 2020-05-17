@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.TreeSet;
 
 import org.apache.commons.configuration2.CombinedConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.vebqa.vebtal.AbstractTestAdaptionPlugin;
 import org.vebqa.vebtal.CommandAutoComplete;
 import org.vebqa.vebtal.GuiManager;
@@ -40,8 +38,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 public class MsgTestAdaptionPlugin extends AbstractTestAdaptionPlugin {
-
-	private static final Logger logger = LoggerFactory.getLogger(MsgTestAdaptionPlugin.class);
 
 	/**
 	 * unique id of the test adapter
